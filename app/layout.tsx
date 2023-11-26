@@ -3,6 +3,7 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import { ClerkProvider } from "@clerk/nextjs";
 import { Provider } from "./Providers";
+import {ToastProvider} from "@/app/ToastProvider";
 
 
 
@@ -25,7 +26,7 @@ export default function RootLayout({
    
       <Provider>
         <html lang="en">
-        <body className={inter.className}>{children}</body>
+        <body className={inter.className}><ToastProvider/> {children}</body>
       </html>
       </Provider>
   );

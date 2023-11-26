@@ -1,6 +1,5 @@
 "use client"
 import * as z from "zod";
-import axios from "axios";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { useRouter } from "next/navigation";
@@ -17,12 +16,16 @@ import {
 } from "@/components/ui/form";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import toast from "react-hot-toast";
+import {createCourse} from "@/lib/api/course";
+import {useMutation, useQueryClient} from "@tanstack/react-query";
+import {createCourseDTO} from "@/Server/Domain/DTO/course";
 
-const formSchema = z.object({
-  title: z.string().min(1, { message: "Title is required" }),
-});
+const formSchema = createCourseDTO
 
 const CreatePage = () => {
+  const router = useRouter();
+
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -31,8 +34,27 @@ const CreatePage = () => {
   });
 
   const { isSubmitting, isValid } = form.formState;
-  const onSubmit = (values: z.infer<typeof formSchema>) => {
-    console.log(values);
+  const queryClient = useQueryClient();
+  const {mutateAsync:createCourseMutation} = useMutation({
+    mutationFn: createCourse,
+    onSuccess(data){
+      toast.success("Course Creation Successful")
+      router.push(`/teacher/courses/${data.id}`)
+    },
+    onError:()=>{
+      toast.error("Error Happened")
+    }
+
+  })
+  const onSubmit = async (values: z.infer<typeof formSchema>) => {
+    try {
+        const {title }= values;
+        await createCourseMutation({title})
+        // router.push()
+    } catch (error) {
+      // Handle errors
+      toast.error("Something went Wrong")
+    }
   };
 
   return (
