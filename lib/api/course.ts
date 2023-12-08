@@ -12,13 +12,17 @@ export const createCourse = async(course: z.infer<typeof formSchema>)=>{
 }
 
 export const getCourse = async(id:string)=>{
-        const res = await api.get(`/api/course/${id}`)
+        const res = await api.get(`/api/courses/${id}`)
         const newCourse = getCourseDTO.parse(await res.json())
         return newCourse
 }
 
-export const updateCourse = async(id:string)=>{
-        const res = await api.patch(`api/course/${id}`)
+type updateCourseParams =  z.infer<typeof formSchema> & {courseId:string}
+export const updateCourse = async(course:updateCourseParams)=>{
+
+        const {title, description,imageUrl} = course
+        const data = createCourseDTO.parse({title, description, imageUrl})
+        const res = await api.patch(`/api/courses/${course.courseId}`,{json:data})
         return "success"
 }
 

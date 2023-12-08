@@ -22,22 +22,23 @@ import { Button } from "@/components/ui/button";
 import {useState} from "react";
 import {Pencil} from "lucide-react";
 import toast from "react-hot-toast";
+import {cn} from "@/lib/utils";
+import {Textarea} from "@/components/ui/textarea";
+import {getCourseDTO} from "@/Server/Domain/DTO/course";
 
 
-interface TitleFormProps{
-    initialData:{
-        title:string
-    };
+interface DescriptionFormProps{
+    initialData:z.infer<typeof getCourseDTO>
     courseId: string
 }
 const formSchema = z.object({
-    title:z.string().min(1,{
+    description:z.string().min(1,{
         message:"Title is required"
     })
 })
 
-export const TitleForm =({initialData, courseId}:
-    TitleFormProps
+export const DescriptionForm =({initialData, courseId}:
+                             DescriptionFormProps
 )=>{
     const queryClient = useQueryClient();
     const router = useRouter()
@@ -47,7 +48,7 @@ export const TitleForm =({initialData, courseId}:
     const updateCourseMutation= useMutation({
         mutationFn:updateCourse,
         onSuccess(data){
-            toast.success('Title Updated Successfully')
+            toast.success('Description Updated Successfully')
             queryClient.invalidateQueries({ queryKey: ['CourseTitle'] })
         },
         onError(){
@@ -60,35 +61,38 @@ export const TitleForm =({initialData, courseId}:
     }
     const form = useForm<z.infer<typeof formSchema>> ({
         resolver: zodResolver(formSchema),
-        defaultValues:initialData
+        defaultValues:{
+            description: initialData?.description || ""
+        },
     })
 
     const {isSubmitting,isValid} = form.formState
 
     const onSubmit= async (values: z.infer<typeof formSchema>)=>{
-        const {title} = values;
-        const mutateVal = {title, courseId}
+        const {description} = values;
+        const {title} = initialData
+        const mutateVal = { title,description, courseId}
         updateCourseMutation.mutate(mutateVal)
     }
 
     return(
         <div className="mt-6 border bg-slate-100 rounded-md p-4">
             <div className="font-medium flex items-center justify-between">
-                Course title
+                Course Description
                 <Button onClick={toggleEdit} variant="ghost">
                     {isEditing ? (
                         <>Cancel</>
                     ) : (
                         <>
                             <Pencil className="h-4 w-4 mr-2" />
-                            Edit title
+                            Edit Description
                         </>
                     )}
                 </Button>
             </div>
             {!isEditing && (
-                <p className="text-sm mt-2">
-                    {initialData.title}
+                <p className={cn("text-sm mt-2", !initialData.description && "text-slate-500 italic")}>
+                    {initialData.description || "No Description Found"}
                 </p>
             )}
             {isEditing && (
@@ -99,13 +103,13 @@ export const TitleForm =({initialData, courseId}:
                     >
                         <FormField
                             control={form.control}
-                            name="title"
+                            name="description"
                             render={({ field }) => (
                                 <FormItem>
                                     <FormControl>
-                                        <Input
+                                        <Textarea
                                             disabled={isSubmitting}
-                                            placeholder="e.g. 'Advanced web development'"
+                                            placeholder="e.g. 'This course is about ....' "
                                             {...field}
                                         />
                                     </FormControl>

@@ -1,9 +1,14 @@
 "use client";
 
 import {ClerkProvider} from "@clerk/nextjs";
-import {QueryClient, QueryClientProvider} from "@tanstack/react-query";
+import {QueryCache, QueryClient, QueryClientProvider} from "@tanstack/react-query";
 
-const queryClient = new QueryClient();
+const queryClient = new QueryClient({
+    queryCache: new QueryCache({
+        onError: (error:any) =>
+            console.log(error),
+    }),
+})
 
 export const Provider = ({children}: { children: React.ReactNode }) => {
     return (

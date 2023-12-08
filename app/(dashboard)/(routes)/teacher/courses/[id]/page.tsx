@@ -1,21 +1,30 @@
+"use client"
 import {db} from "@/lib/db"
-import {auth} from "@clerk/nextjs"
+import {auth, currentUser, useUser} from "@clerk/nextjs"
+import {useMutation, useQuery, useQueryClient} from "@tanstack/react-query";
 import {redirect} from "next/navigation";
 import {IconBadge} from "@/components/icon-badge";
 import {LayoutDashboard} from "lucide-react";
 import {TitleForm} from "@/app/(dashboard)/(routes)/teacher/courses/[id]/_components/title-form";
+import {DescriptionForm} from "@/app/(dashboard)/(routes)/teacher/courses/[id]/_components/description-form";
+import {ImageForm} from "@/app/(dashboard)/(routes)/teacher/courses/[id]/_components/image-form";
+import {getCourse} from "@/lib/api/course";
+import toast from "react-hot-toast";
 
-const CoursePage = async ({params}: { params: { id: string } }) => {
+const CoursePage =  ({params}: { params: { id: string } }) => {
 
-    const userId = auth();
-    const course = await db.course.findUnique({
-        where: {
-            id: params.id
-        }
-    })
-    if (!userId) {
-        redirect("/")
+    const {user} = useUser();
+    const queryClient = useQueryClient();
+    const { isPending, error,isError, data } = useQuery({queryKey:['Course',params.id], queryFn:()=> getCourse(params.id) })
+    if (isPending) {
+        return <span>Loading...</span>
     }
+
+    const course = data
+    console.log(course)
+    // if (!user.user) {
+    //     redirect("/")
+    // }
 
     if (!course) {
         redirect("/")
@@ -58,6 +67,11 @@ const CoursePage = async ({params}: { params: { id: string } }) => {
                         initialData={course}
                         courseId={course.id}
                     />
+                    <DescriptionForm
+                        initialData={course}
+                        courseId={course.id}
+                    />
+                    <ImageForm initialData={course} courseId={course.id}/>
 
                 </div>
 
