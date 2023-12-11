@@ -20,8 +20,8 @@ export const getCourse = async(id:string)=>{
 type updateCourseParams =  z.infer<typeof formSchema> & {courseId:string}
 export const updateCourse = async(course:updateCourseParams)=>{
 
-        const {title, description,imageUrl} = course
-        const data = createCourseDTO.parse({title, description, imageUrl})
+        const {title, description,imageUrl,categoryId,price} = course
+        const data = createCourseDTO.parse({title, description, imageUrl,categoryId,price})
         const res = await api.patch(`/api/courses/${course.courseId}`,{json:data})
         return "success"
 }

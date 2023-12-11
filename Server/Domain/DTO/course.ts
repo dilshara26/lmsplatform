@@ -1,9 +1,12 @@
 import {z} from "zod";
+import {getAttachment} from "@/Server/Domain/DTO/attachments";
 
 export const createCourseDTO = z.object({
     title: z.string().min(1, {message: "Title is required"}),
     description: z.string().optional(),
-    imageUrl:z.string().optional()
+    imageUrl:z.string().optional(),
+    categoryId:z.string().optional(),
+    price:z.number().optional()
 })
 
 export const getCourseDTO = z.object({
@@ -18,5 +21,6 @@ export const getCourseDTO = z.object({
     categoryId: z.string().nullable(),
     updatedAt: z.string(),
     createdAt: z.string(),
+    attachments:z.array(getAttachment)
 })
 

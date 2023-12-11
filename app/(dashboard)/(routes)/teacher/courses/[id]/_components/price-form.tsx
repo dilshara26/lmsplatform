@@ -26,20 +26,19 @@ import {cn} from "@/lib/utils";
 import {Textarea} from "@/components/ui/textarea";
 import {getCourseDTO} from "@/Server/Domain/DTO/course";
 import {getCategories} from "@/lib/api/category";
+import {formatPrice} from "@/lib/format";
 
 
-interface DescriptionFormProps{
+interface PriceFormProps{
     initialData:z.infer<typeof getCourseDTO>
     courseId: string
 }
 const formSchema = z.object({
-    description:z.string().min(1,{
-        message:"Title is required"
-    })
+    price:z.coerce.number()
 })
 
-export const DescriptionForm =({initialData, courseId}:
-                             DescriptionFormProps
+export const PriceForm =({initialData, courseId}:
+                                   PriceFormProps
 )=>{
     const queryClient = useQueryClient();
     const router = useRouter()
@@ -48,7 +47,7 @@ export const DescriptionForm =({initialData, courseId}:
     const updateCourseMutation= useMutation({
         mutationFn:updateCourse,
         onSuccess(data){
-            toast.success('Description Updated Successfully')
+            toast.success('Price Updated Successfully')
             queryClient.invalidateQueries({ queryKey: ['CourseTitle'] })
         },
         onError(){
@@ -62,37 +61,37 @@ export const DescriptionForm =({initialData, courseId}:
     const form = useForm<z.infer<typeof formSchema>> ({
         resolver: zodResolver(formSchema),
         defaultValues:{
-            description: initialData?.description || ""
+            price: initialData?.price || undefined
         },
     })
 
     const {isSubmitting,isValid} = form.formState
 
     const onSubmit= async (values: z.infer<typeof formSchema>)=>{
-        const {description} = values;
+        const {price} = values;
         const {title} = initialData
-        const mutateVal = { title,description, courseId}
+        const mutateVal = { title,price, courseId}
         updateCourseMutation.mutate(mutateVal)
     }
 
     return(
         <div className="mt-6 border bg-slate-100 rounded-md p-4">
             <div className="font-medium flex items-center justify-between">
-                Course Description
+                Course Price
                 <Button onClick={toggleEdit} variant="ghost">
                     {isEditing ? (
                         <>Cancel</>
                     ) : (
                         <>
                             <Pencil className="h-4 w-4 mr-2" />
-                            Edit Description
+                            Edit Price
                         </>
                     )}
                 </Button>
             </div>
             {!isEditing && (
                 <p className={cn("text-sm mt-2", !initialData.description && "text-slate-500 italic")}>
-                    {initialData.description || "No Description Found"}
+                    {initialData.price? formatPrice(initialData.price): "No Price Found"}
                 </p>
             )}
             {isEditing && (
@@ -103,13 +102,15 @@ export const DescriptionForm =({initialData, courseId}:
                     >
                         <FormField
                             control={form.control}
-                            name="description"
+                            name="price"
                             render={({ field }) => (
                                 <FormItem>
                                     <FormControl>
-                                        <Textarea
+                                        <Input
+                                            type="number"
+                                            step="0.01"
                                             disabled={isSubmitting}
-                                            placeholder="e.g. 'This course is about ....' "
+                                            placeholder="e.g. '3000 LKR' "
                                             {...field}
                                         />
                                     </FormControl>
