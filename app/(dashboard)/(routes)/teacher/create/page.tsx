@@ -35,7 +35,7 @@ const CreatePage = () => {
 
   const { isSubmitting, isValid } = form.formState;
   const queryClient = useQueryClient();
-  const {mutateAsync:createCourseMutation} = useMutation({
+  const {mutate:createCourseMutation} = useMutation({
     mutationFn: createCourse,
     onSuccess(data){
       toast.success("Course Creation Successful")
@@ -46,15 +46,12 @@ const CreatePage = () => {
     }
 
   })
-  const onSubmit = async (values: z.infer<typeof formSchema>) => {
-    try {
+  const onSubmit =  (values: z.infer<typeof formSchema>) => {
+
         const {title }= values;
-        await createCourseMutation({title})
+        createCourseMutation({title})
         // router.push()
-    } catch (error) {
-      // Handle errors
-      toast.error("Something went Wrong")
-    }
+
   };
 
   return (

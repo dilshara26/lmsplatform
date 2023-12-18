@@ -14,15 +14,20 @@ import {getCategories} from "@/lib/api/category";
 import {CategoryForm} from "@/app/(dashboard)/(routes)/teacher/courses/[id]/_components/select-category";
 import {PriceForm} from "@/app/(dashboard)/(routes)/teacher/courses/[id]/_components/price-form";
 import {AttachmentForm} from "@/app/(dashboard)/(routes)/teacher/courses/[id]/_components/attachment-form";
+import {ChapterForm} from "@/app/(dashboard)/(routes)/teacher/courses/[id]/_components/chapter-form";
 
 const CoursePage =  ({params}: { params: { id: string } }) => {
 
-    const {user} = useUser();
+    const user = useUser();
+
     const queryClient = useQueryClient();
 
     const { isPending, error,isError, data } = useQuery({queryKey:['Course',params.id], queryFn:()=> getCourse(params.id) })
     if (isPending) {
         return <span>Loading...</span>
+    }
+    if(!user.isLoaded){
+        return <span>User Loading...</span>
     }
 
     const course = data
@@ -34,12 +39,21 @@ const CoursePage =  ({params}: { params: { id: string } }) => {
     if (!course) {
         redirect("/")
     }
+
+    if(course.userId != user?.user?.id ){
+        console.log(user?.user?.id)
+        console.log(course.userId)
+        redirect("/")
+    }
+
     const requiredFields = [
         course.title,
         course.description,
         course.imageUrl,
         course.price,
         course.categoryId,
+        course.chapters.some(chapter=> chapter.isPublished)
+
     ];
 
 
@@ -89,11 +103,10 @@ const CoursePage =  ({params}: { params: { id: string } }) => {
                                 Course chapters
                             </h2>
                         </div>
-                        <h1>Todo</h1>
-                        {/*<ChaptersForm*/}
-                        {/*    initialData={course}*/}
-                        {/*    courseId={course.id}*/}
-                        {/*/>*/}
+                        <ChapterForm
+                            initialData={course}
+                            courseId={course.id}
+                        />
                     </div>
                     <div>
                         <div className="flex items-center gap-x-2">

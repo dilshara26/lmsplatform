@@ -22,6 +22,11 @@ export async function GET(
                     orderBy:{
                         createdAt: "desc"
                     }
+                },
+                chapters:{
+                    orderBy: {
+                        position:"asc"
+                    }
                 }
             }
         })
