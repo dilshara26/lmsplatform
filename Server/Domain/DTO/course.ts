@@ -23,7 +23,8 @@ export const getCourseDTO = z.object({
     updatedAt: z.string(),
     createdAt: z.string(),
     attachments:z.array(getAttachment),
-    chapters:z.array(getChapter)
+    chapters:z.array(getChapter),
+
 })
 
 

@@ -58,7 +58,7 @@ export const ChapterDescriptionForm = ({
     const editChapterOrderMutation = useMutation({
         mutationFn:updateChapter,
         onSuccess(){
-            toast.success("Chapters Successfully Reordered")
+            toast.success("Chapter Description Successfully Added")
 
             queryClient.invalidateQueries({queryKey:['Chapters']})
 

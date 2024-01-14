@@ -19,6 +19,13 @@ import {
 import {
     ChapterAccessForm
 } from "@/app/(dashboard)/(routes)/teacher/courses/[id]/chapters/[chapterId]/_components/chapter-access-form";
+import {
+    ChapterVideoForm
+} from "@/app/(dashboard)/(routes)/teacher/courses/[id]/chapters/[chapterId]/_components/chapter-video-form";
+import {
+    ChapterActions
+} from "@/app/(dashboard)/(routes)/teacher/courses/[id]/chapters/[chapterId]/_components/chapter-actions-form";
+import {Banner} from "@/components/banner";
 
 
 
@@ -61,12 +68,12 @@ const ChapterIdPage =  ({
 
     return (
         <>
-            {/*{!chapter.isPublished && (*/}
-            {/*    <Banner*/}
-            {/*        variant="warning"*/}
-            {/*        label="This chapter is unpublished. It will not be visible in the course"*/}
-            {/*    />*/}
-            {/*)}*/}
+            {!chapter.isPublished && (
+                <  Banner
+                    variant="warning"
+                    label="This chapter is unpublished. It will not be visible in the course"
+                />
+            )}
             <div className="p-6">
                 <div className="flex items-center justify-between">
                     <div className="w-full">
@@ -86,12 +93,12 @@ const ChapterIdPage =  ({
                   Complete all fields {completionText}
                 </span>
                             </div>
-                            {/*<ChapterActions*/}
-                            {/*    disabled={!isComplete}*/}
-                            {/*    courseId={params.courseId}*/}
-                            {/*    chapterId={params.chapterId}*/}
-                            {/*    isPublished={chapter.isPublished}*/}
-                            {/*/>*/}
+                            <ChapterActions
+                                disabled={!isComplete}
+                                courseId={params.id}
+                                chapterId={params.chapterId}
+                                isPublished={chapter.isPublished}
+                            />
                         </div>
                     </div>
                 </div>
@@ -136,11 +143,11 @@ const ChapterIdPage =  ({
                                 Add a video
                             </h2>
                         </div>
-                        {/*<ChapterVideoForm*/}
-                        {/*    initialData={chapter}*/}
-                        {/*    chapterId={params.chapterId}*/}
-                        {/*    courseId={params.courseId}*/}
-                        {/*/>*/}
+                        <ChapterVideoForm
+                            initialData={chapter}
+                            courseId={params.id}
+                            chapterId={params.chapterId}
+                        />
                     </div>
                 </div>
             </div>

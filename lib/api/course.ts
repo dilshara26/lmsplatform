@@ -26,3 +26,19 @@ export const updateCourse = async(course:updateCourseParams)=>{
         return "success"
 }
 
+export const publishCourse = async(id:string)=>{
+        const res = await api.patch(`/api/courses/${id}/publish`)
+        return "success"
+}
+
+export const unPublishCourse = async(id:string)=>{
+        const res = await api.patch(`/api/courses/${id}/unpublish`)
+        return "success"
+}
+
+export const deleteCourse = async (id:string)=>{
+        await api.delete(`/api/courses/${id}`)
+        return "success"
+}
+
+

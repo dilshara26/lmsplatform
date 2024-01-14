@@ -101,9 +101,9 @@ export const ChaptersList = ({
                                         {chapter.title}
                                         <div className="ml-auto pr-2 flex items-center gap-x-2">
                                             {chapter.isFree && (
-                                                <Badge>
+                                                <span className="bg-green-500 py-1 px-3 text-white rounded-2xl" >
                                                     Free
-                                                </Badge>
+                                                </span>
                                             )}
                                             <span
                                                 className={cn(

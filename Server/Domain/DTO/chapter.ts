@@ -1,4 +1,7 @@
 import {z} from "zod";
+import {getMuxData} from "@/Server/Domain/DTO/muxData";
+
+
 
 export const  getChapter  = z.object({
     id:z.string(),
@@ -10,7 +13,8 @@ export const  getChapter  = z.object({
     isFree:z.boolean(),
     courseId:z.string(),
     createdAt:z.string(),
-    updatedAt:z.string()
+    updatedAt:z.string(),
+    muxData: getMuxData.nullable()
 })
 
 export const getChapterParams= z.object({
@@ -41,4 +45,3 @@ export const editChapter= z.object({
     isPublished:z.boolean().optional(),
     isFree:z.boolean().optional()
 })
-

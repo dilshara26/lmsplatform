@@ -32,3 +32,17 @@ export const getSelectedChapter = async(chapter: z.infer<typeof getChapterParams
     return newChapter
 
 }
+
+export const publishChapter = async(chapter: z.infer<typeof getChapterParams>)=>{
+    const res = await api.patch(`/api/courses/${chapter.courseId}/chapters/${chapter.id}/publish`)
+    return "success"
+}
+
+export const unPublishChapter = async(chapter: z.infer<typeof getChapterParams>)=>{
+    const res = await api.patch(`/api/courses/${chapter.courseId}/chapters/${chapter.id}/unpublish`)
+    return "success"
+}
+export const deleteChapter = async (chapter: z.infer<typeof getChapterParams>)=>{
+    await api.delete(`/api/courses/${chapter.courseId}/chapters/${chapter.id}`)
+    return "success"
+}
