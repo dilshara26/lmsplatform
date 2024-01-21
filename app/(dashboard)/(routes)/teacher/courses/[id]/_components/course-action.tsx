@@ -66,10 +66,10 @@ export const CourseActions = ({
 
             if (isPublished) {
                 unPublishCourseMutation.mutate(courseId)
-                // await axios.patch(`/api/courses/${courseId}/chapters/${chapterId}/unpublish`);
+                // await axios.patch(`/api/courses/${courseId}/Chapters/${chapterId}/unpublish`);
                 // toast.success("Chapter unpublished");
             } else {
-                // await axios.patch(`/api/courses/${courseId}/chapters/${chapterId}/publish`);
+                // await axios.patch(`/api/courses/${courseId}/Chapters/${chapterId}/publish`);
                 // toast.success("Chapter published");
                 publishCourseMutation.mutate(courseId)
             }

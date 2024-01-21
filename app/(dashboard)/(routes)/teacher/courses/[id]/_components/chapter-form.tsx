@@ -155,7 +155,7 @@ export const ChapterForm =({initialData, courseId}:
                     "text-sm mt-2",
                     !initialData.chapters.length && "text-slate-500 italic"
                 )}>
-                    {!initialData.chapters.length && "No chapters"}
+                    {!initialData.chapters.length && "No Chapters"}
                     <ChaptersList
                         onEdit={onEdit}
                         onReorder={onReorder}
